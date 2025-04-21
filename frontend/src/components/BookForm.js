@@ -1,33 +1,68 @@
 import React, {useState, useEffect} from "react";
-import api from "..services/api"; // Axios
+//import api from "../services/api"; // Axios
 
 function BookForm({ selectedBook, onSave }) {
     const[title, setTitle] = useState("");
     const[author, setAuthor] = useState("");
     const[genre, setGenre] = useState("");
-    const[pubicationDate, setPublicationDate] = useState("");
+    const[publicationDate, setPublicationDate] = useState("");
 
     useEffect(() => {
         if (selectedBook) { 
             setTitle(selectedBook.title);
             setAuthor(selectedBook.author);
-            setGenre(setGenre.genre);
-            setPublicationDate(selectedBook.pubication_date);
+            setGenre(selectedBook.genre);
+            setPublicationDate(selectedBook.publication_date);
         }
     }, [selectedBook]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        const bookData = {
+            title,
+            author,
+            genre,
+            publication_date: publicationDate,
+        };
+    
+        const isEdit = Boolean(selectedBook);
+        const url = isEdit
+            ? `http://localhost:8000/api/books/${selectedBook.id}/`
+            : "http://localhost:8000/api/books/";
+    
+        const method = isEdit ? "PUT" : "POST";
+    
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bookData),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Failed to save the book:", errorData);
+                alert("Something went wrong while saving the book.");
+                return;
+            }
+    
+            const resultBook = await response.json();
+            onSave(resultBook); // Refresh list & clear form
+            setTitle("");
+            setAuthor("");
+            setGenre("");
+            setPublicationDate("");
+            window.location.reload();
 
-        const bookData = {title, author, genre, publication_date: pubicationDate};
-
-        if (selectedBook) { 
-            await api.put(`/books/${selectedBook.id}`, bookData);
-        } else { 
-            await api.post("/books/", bookData);
+        } catch (error) {
+            console.error("Error saving book:", error);
+            alert("Something went wrong while saving the book.");
         }
-        onSave();
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +113,7 @@ function BookForm({ selectedBook, onSave }) {
                         Publication Date
                     </label>
                     <input 
-                        type="text"
+                        type="date"
                         id="publicationDate"
                         value={publicationDate}
                         onChange={(e) => setPublicationDate(e.target.value)}
@@ -90,14 +125,20 @@ function BookForm({ selectedBook, onSave }) {
             <div className="flex justify-between">
                 <button
                     type="submit"
-                    className="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="bg-green-800 text-white px-6 py-2 rounded-lg shadow-md hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                         {selectedBook ? "Update Book" : "Add Book"}
                 </button>
 
                 <button
                     type="button"
-                    onClick={onSave}
+                    onClick={()=> {
+                        setTitle("");
+                        setAuthor("");
+                        setGenre("");
+                        setPublicationDate("");
+                        onSave(null);
+                    }}
                     className="bg-gray-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
                     Cancel

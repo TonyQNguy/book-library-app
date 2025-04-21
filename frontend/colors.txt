@@ -1,0 +1,7 @@
+Main Text	Charcoal	#3C3C3C
+Headers	Rich Soil Brown	#5C4033
+Buttons	Olive Green / Rust	#708238 / #B7410E
+Button Hover	Moss Green	#78866B
+Cards	Clay Beige / Sandstone	#D6C4A8 / #CDB79E
+Background	Cream / Dusty White	#FDF6EC / #FAF8F4
+Accents	Terracotta / Warm Taupe	#E2725B / #8B6A4A

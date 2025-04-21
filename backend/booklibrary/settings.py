@@ -125,4 +125,15 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CSRF_COOKIE_DOMAIN = ".localhost"
+
+# Optional: if you're using Django's CSRF protection across domains
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+
+]
