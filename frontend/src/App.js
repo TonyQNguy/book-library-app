@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
-import './index.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import BookForm from "./components/BookForm";
-//import BookList from "./components/BookList";
 import BookCarousel from "./components/BookCarousel";
 import api from "./services/api";
+import './index.css';
 
 function App() {
   const [editingBook, setEditingBook] = useState(null);
@@ -32,6 +33,16 @@ function App() {
     setEditingBook(null);
   };
 
+  const handleDelete = (bookId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this book?");
+    
+    if (confirmDelete) {
+      // Remove the book from the list based on its ID
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+    }
+  };
+  
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
@@ -39,7 +50,7 @@ function App() {
         <BookForm selectedBook={editingBook} onSave={handleSave} />
         <hr className="my-6" />
         <h2 className="text-xl font-semibold mb-4 text-center text-green-800">Explore Your Books</h2>
-        <BookCarousel books={books} onEdit={handleEdit} />
+        <BookCarousel books={books} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
     </div>
   );

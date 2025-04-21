@@ -4,7 +4,7 @@ import BookCard from "./BookCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const BookCarousel = ({ books, onEdit }) => {
+const BookCarousel = ({ books, onEdit, onDelete }) => {
   const settings = {
     dots: true,
     infinite: false,
@@ -21,7 +21,7 @@ const BookCarousel = ({ books, onEdit }) => {
     <Slider {...settings}>
       {books.map((book) => (
         <div key={book.id} className="p-2">
-          <BookCard book={book} onEdit={onEdit} />
+          <BookCard book={book} onEdit={onEdit} onDelete={onDelete} />
         </div>
       ))}
     </Slider>
