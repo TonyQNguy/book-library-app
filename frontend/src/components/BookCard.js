@@ -1,6 +1,23 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
+import api from "../services/api"; // Axios
 
 function BookCard({ book, onEdit, onDelete }) {
+
+    const [books, setBooks] = useState([]);
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            const response = await api.get("/books/");
+            setBooks(response.data);
+        };
+        fetchBooks();
+    }, []); // Refetch after adding/deleting
+
+    const handleDelete = async (id) => { 
+        await api.delete(`/books/${id}/`);
+        setBooks(books.filter((book) => book.id !== id));
+    };
+
     return (
         <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{book.title}</h3>
@@ -15,7 +32,7 @@ function BookCard({ book, onEdit, onDelete }) {
                     Edit
                 </button>
                 <button
-                    onClick={() => onDelete(book.id)}
+                    onClick={() => onDelete(handleDelete(book.id))}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                 >
                     Delete

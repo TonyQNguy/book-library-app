@@ -39,6 +39,7 @@ function App() {
     if (confirmDelete) {
       // Remove the book from the list based on its ID
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+      window.location.reload();
     }
   };
   
